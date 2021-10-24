@@ -1,0 +1,11 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /beers/{beer} {
+      // All users can read beers
+    	allow read
+      // All users can add their rating if that's the only thing they affect
+      allow update: if (request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['ratings']));
+    }
+  }
+}
