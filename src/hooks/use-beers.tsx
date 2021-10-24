@@ -1,5 +1,5 @@
-import { Button, Rating, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import BeerComponent from "../components/beer";
 import { Beer, Rating as BeerRating } from "./infrastructure/use-firestore";
 
 type Props = {
@@ -8,15 +8,6 @@ type Props = {
 
 type UserRatings = { [key: string]: BeerRating };
 type IsBeerRatedState = { [key: string]: boolean | undefined };
-
-const getAverageWithOneDecimal = (ratings: number[]) =>
-  Math.round(
-    (ratings.reduce((agg, current): number => {
-      return agg + current;
-    }, 0) /
-      ratings.length) *
-      10
-  ) / 10;
 
 const IS_BEER_RATED_LOCALSTORAGE_KEY = "IS_BEER_RATED";
 const USER_RATINGS_LOCALSTORAGE_KEY = "USER_RATINGS";
@@ -62,7 +53,7 @@ const useBeers = (
     );
   }, [userRatings]);
 
-  const handleAromaUpdate = useCallback(
+  const handleOnAromaUpdate = useCallback(
     (beerId: string, rating: number) => {
       setUserRatings((prev) => {
         var beerRating: BeerRating = userRatings[beerId]
@@ -80,7 +71,7 @@ const useBeers = (
     [userRatings]
   );
 
-  const handleCrushabilityUpdate = useCallback(
+  const handleOnCrushabilityUpdate = useCallback(
     (beerId: string, rating: number) => {
       setUserRatings((prev) => {
         var beerRating: BeerRating = userRatings[beerId]
@@ -98,7 +89,7 @@ const useBeers = (
     [userRatings]
   );
 
-  const handleTasteUpdate = useCallback(
+  const handleOnTasteUpdate = useCallback(
     (beerId: string, rating: number) => {
       setUserRatings((prev) => {
         var beerRating: BeerRating = userRatings[beerId]
@@ -115,7 +106,7 @@ const useBeers = (
     },
     [userRatings]
   );
-  const handleHappyUpdate = useCallback(
+  const handleOnHappyUpdate = useCallback(
     (beerId: string, rating: number) => {
       setUserRatings((prev) => {
         var beerRating: BeerRating = userRatings[beerId]
@@ -148,7 +139,7 @@ const useBeers = (
     });
   }, []);
 
-  const handleBeerRatingSubmitted = useCallback(
+  const handleOnRatingSubmitted = useCallback(
     async (beerId: string) => {
       const rating = userRatings[beerId] ?? {
         aroma: 0,
@@ -165,139 +156,30 @@ const useBeers = (
   const renderedBeers = useMemo<JSX.Element[]>(
     () =>
       beers.map((b): JSX.Element => {
-        const iHaveRatedThisBeer = isBeerRatedState[b.id] ?? false;
-        const iHaveNotRatedThisBeer = !iHaveRatedThisBeer;
+        const hasBeenRated = isBeerRatedState[b.id] ?? false;
         return (
-          <div key={b.id}>
-            <h2>{b.name}</h2>
-            <Typography>ABV: {b.abv}%</Typography>
-            <div style={{ display: "flex" }}>
-              {(b.ratings.length && (
-                <div
-                  style={{
-                    padding: 20,
-                  }}
-                >
-                  <Typography variant="h4" paddingBottom={1}>
-                    Average Rating
-                  </Typography>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Aroma</Typography>
-                      <Rating
-                        readOnly
-                        value={getAverageWithOneDecimal(
-                          b.ratings.flatMap((r) => r.aroma)
-                        )}
-                      />
-                    </div>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Crushability</Typography>
-                      <Rating
-                        readOnly
-                        value={getAverageWithOneDecimal(
-                          b.ratings.flatMap((r) => r.crushability)
-                        )}
-                      />
-                    </div>
-                  </div>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Taste</Typography>
-                      <Rating
-                        readOnly
-                        value={getAverageWithOneDecimal(
-                          b.ratings.flatMap((r) => r.taste)
-                        )}
-                      />
-                    </div>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Happy</Typography>
-                      <Rating
-                        readOnly
-                        value={getAverageWithOneDecimal(
-                          b.ratings.flatMap((r) => r.dieHappy)
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )) || <></>}
-              {(b.ratingIsOpen && (
-                <div style={{ padding: 20 }}>
-                  <Typography variant="h4" paddingBottom={1}>
-                    {iHaveNotRatedThisBeer
-                      ? "Rate this beer"
-                      : "You rated this beer"}
-                  </Typography>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Aroma</Typography>
-                      <Rating
-                        readOnly={iHaveRatedThisBeer}
-                        value={userRatings[b.id]?.aroma ?? 0}
-                        onChange={(_, rating) =>
-                          handleAromaUpdate(b.id, rating ?? 0)
-                        }
-                      />
-                    </div>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Crushability</Typography>
-                      <Rating
-                        readOnly={iHaveRatedThisBeer}
-                        value={userRatings[b.id]?.crushability ?? 0}
-                        onChange={(_, rating) =>
-                          handleCrushabilityUpdate(b.id, rating ?? 0)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Taste</Typography>
-                      <Rating
-                        readOnly={iHaveRatedThisBeer}
-                        value={userRatings[b.id]?.taste ?? 0}
-                        onChange={(_, rating) =>
-                          handleTasteUpdate(b.id, rating ?? 0)
-                        }
-                      />
-                    </div>
-                    <div style={{ padding: 10 }}>
-                      <Typography variant="h5">Happy</Typography>
-                      <Rating
-                        readOnly={iHaveRatedThisBeer}
-                        value={userRatings[b.id]?.dieHappy ?? 0}
-                        onChange={(_, rating) =>
-                          handleHappyUpdate(b.id, rating ?? 0)
-                        }
-                      />
-                    </div>
-                  </div>
-                  {(iHaveNotRatedThisBeer && (
-                    <>
-                      <Typography>You can only rate once</Typography>
-                      <Button
-                        variant="contained"
-                        onClick={() => handleBeerRatingSubmitted(b.id)}
-                      >
-                        Submit Rating
-                      </Button>
-                    </>
-                  )) || <></>}
-                </div>
-              )) || <></>}
-            </div>
-          </div>
+          <BeerComponent
+            key={b.id}
+            beer={b}
+            hasBeenRated={hasBeenRated}
+            userRating={userRatings[b.id]}
+            onAromaUpdate={(value: number) => handleOnAromaUpdate(b.id, value)}
+            onCrushabilityUpdate={(value: number) =>
+              handleOnCrushabilityUpdate(b.id, value)
+            }
+            onHappyUpdate={(value: number) => handleOnHappyUpdate(b.id, value)}
+            onTasteUpdate={(value: number) => handleOnTasteUpdate(b.id, value)}
+            onRatingSubmitted={async () => await handleOnRatingSubmitted(b.id)}
+          />
         );
       }),
     [
       beers,
-      handleAromaUpdate,
-      handleBeerRatingSubmitted,
-      handleCrushabilityUpdate,
-      handleHappyUpdate,
-      handleTasteUpdate,
+      handleOnAromaUpdate,
+      handleOnRatingSubmitted,
+      handleOnCrushabilityUpdate,
+      handleOnHappyUpdate,
+      handleOnTasteUpdate,
       isBeerRatedState,
       userRatings,
     ]
