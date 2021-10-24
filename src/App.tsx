@@ -16,6 +16,7 @@ const useStyles = makeStyles({
     justifyContent: "center",
     fontSize: "calc(10px + 2vmin)",
     color: "white",
+    minHeight: "100vh",
   },
   rotateIcon: {
     animation: "spin 4s linear infinite",
@@ -38,7 +39,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.app}>
-        <Typography variant="h1">Octoberfest</Typography>
+        <Typography variant="h2">Octoberfest</Typography>
         <Typography variant="h4">
           Rate your beers and see what others think
         </Typography>
