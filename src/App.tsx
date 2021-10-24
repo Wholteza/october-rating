@@ -1,18 +1,15 @@
 import useFirebase from "./hooks/infrastructure/use-firebase";
 import useFirestore from "./hooks/infrastructure/use-firestore";
-import { Typography } from "@mui/material";
+import { createTheme, Typography } from "@mui/material";
 import LoopSharpIcon from "@mui/icons-material/LoopSharp";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, ThemeProvider } from "@mui/styles";
 import useBeers from "./hooks/use-beers";
 import RatingHelp from "./components/rating-help";
 
 const useStyles = makeStyles({
   app: {
     textAlign: "center",
-  },
-  header: {
     backgroundColor: "#282c34",
-    minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -31,6 +28,7 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
+  const theme = createTheme({});
 
   const { app } = useFirebase();
   const { beers, rateBeer } = useFirestore(app);
@@ -38,8 +36,8 @@ function App() {
   const { renderedBeers } = useBeers(beers, rateBeer);
 
   return (
-    <div className={classes.app}>
-      <header className={classes.header}>
+    <ThemeProvider theme={theme}>
+      <div className={classes.app}>
         <Typography variant="h1">Octoberfest</Typography>
         <Typography variant="h4">
           Rate your beers and see what others think
@@ -51,8 +49,8 @@ function App() {
           <LoopSharpIcon fontSize="large" className={classes.rotateIcon} />
         )}
         <RatingHelp className={classes.helpSection} />
-      </header>
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
 

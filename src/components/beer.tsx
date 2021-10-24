@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useCallback, useMemo } from "react";
 import {
@@ -27,12 +27,18 @@ type Props = {
   onRatingSubmitted: () => Promise<void>;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   beerContainer: {
     marginTop: 50,
   },
   ratingsContainer: {
     display: "flex",
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+    },
   },
   ratingsSection: {
     padding: 20,
@@ -43,7 +49,7 @@ const useStyles = makeStyles({
   ratingColumnHeader: {
     paddingBottom: 5,
   },
-});
+}));
 
 const Beer = ({
   beer,
