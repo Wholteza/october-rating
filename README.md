@@ -9,7 +9,7 @@ Web app where you can rate beers including the categories:
 
 Tested out using firebase for this one:
 
-- Authentication: Anonoymous, you add beers in the firebase console firestore editor.
+- Authentication: Anonymous, you add beers in the firebase console firestore editor.
 - Access control: Firestore rules make sure users can only send in new ratings.
 - Storage: Firestore
 

@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import LoopSharpIcon from "@mui/icons-material/LoopSharp";
 import { makeStyles } from "@mui/styles";
 import useBeers from "./hooks/use-beers";
+import RatingHelp from "./components/rating-help";
 
 const useStyles = makeStyles({
   app: {
@@ -23,6 +24,9 @@ const useStyles = makeStyles({
     animation: "spin 4s linear infinite",
     marginTop: 100,
   },
+  helpSection: {
+    marginTop: 50,
+  },
 });
 
 function App() {
@@ -40,11 +44,13 @@ function App() {
         <Typography variant="h4">
           Rate your beers and see what others think
         </Typography>
+
         {beers.length ? (
           renderedBeers
         ) : (
           <LoopSharpIcon fontSize="large" className={classes.rotateIcon} />
         )}
+        <RatingHelp className={classes.helpSection} />
       </header>
     </div>
   );
