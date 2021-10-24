@@ -168,7 +168,7 @@ const useBeers = (
         const iHaveRatedThisBeer = isBeerRatedState[b.id] ?? false;
         const iHaveNotRatedThisBeer = !iHaveRatedThisBeer;
         return (
-          <div>
+          <div key={b.id}>
             <h2>{b.name}</h2>
             <Typography>ABV: {b.abv}%</Typography>
             <div style={{ display: "flex" }}>
