@@ -1,4 +1,17 @@
-## Todo
+# october-rating
+
+Web app where you can rate beers including the categories:
+
+- Taste
+- Aroma
+- Crushability: Can you drink a lot of it
+- Happy: If you could only drink this beer for the rest of your life, would you die a happy human?
+
+Tested out using firebase for this one:
+
+- Authentication: Anonoymous, you add beers in the firebase console firestore editor.
+- Access control: Firestore rules make sure users can only send in new ratings.
+- Storage: Firestore
 
 ### Getting started
 
@@ -26,13 +39,9 @@
 
 ### Deploying to firebase
 
-1.  Build the react application, make sure you have your settings in place:
+1.  Run the all in one command, make sure you are using the correct firebase project using `firebase --use` prior to running this:
     ```bash
-    yarn build
-    ```
-1.  Deploy to firebase:
-    ```bash
-    firebase deploy
+    yarn deploy
     ```
 
 ### TODO
