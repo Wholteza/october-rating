@@ -16,14 +16,14 @@ const RatingHelp = ({ className }: Props) => {
 
   return (
     <div className={className}>
-      <Typography variant="h2" className={classes.header}>
-        What are those odd categories
+      <Typography variant="h4" className={classes.header}>
+        What are those odd categories?
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="h5">
         Happy - If you could only drink this one beer for the rest of your life,
         would you die a happy human?
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="h5">
         Crushability - Is this a beer that you could drink a lot of (crush)
         during one evening
       </Typography>

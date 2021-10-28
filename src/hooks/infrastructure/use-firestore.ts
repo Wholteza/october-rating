@@ -31,6 +31,7 @@ export type Beer = {
   abv: number;
   ratings: Rating[];
   ratingIsOpen: boolean;
+  brewery: string;
 };
 
 export type Rating = {
@@ -47,6 +48,7 @@ const beerConverter = (): FirestoreDataConverter<Beer> => ({
     abv: modelObject.abv,
     ratings: modelObject.ratings,
     ratingIsOpen: modelObject.ratingIsOpen,
+    brewery: modelObject.brewery,
   }),
   fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as Beer,
 });

@@ -33,18 +33,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ratingsContainer: {
     display: "flex",
-    [theme.breakpoints.down("md")]: {
-      flexDirection: "column",
-    },
-    [theme.breakpoints.up("md")]: {
-      flexDirection: "row",
-    },
+    flexDirection: "column",
   },
   ratingsSection: {
     padding: 20,
   },
   ratingsSectionRow: {
     display: "flex",
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+    },
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+    },
   },
   ratingColumnHeader: {
     paddingBottom: 5,
@@ -99,50 +100,46 @@ const Beer = ({
     [onRatingSubmitted]
   );
 
+  const yourRating = useMemo<number>(() => {
+    return (
+      userRating.aroma +
+      userRating.crushability +
+      userRating.dieHappy +
+      userRating.taste
+    );
+  }, [
+    userRating.aroma,
+    userRating.crushability,
+    userRating.dieHappy,
+    userRating.taste,
+  ]);
+  const totalAverage = useMemo<number>(() => {
+    const total = beer.ratings.reduce<number[]>((aggregate, current) => {
+      return [
+        ...aggregate,
+        current.aroma + current.crushability + current.dieHappy + current.taste,
+      ];
+    }, []);
+    return getAverageWithOneDecimal(total);
+  }, [beer.ratings]);
+
   return (
     <div className={classes.beerContainer}>
-      <Typography variant="h2">{beer.name}</Typography>
-      <Typography>ABV: {beer.abv}%</Typography>
+      <Typography>{beer.brewery}</Typography>
+      <Typography variant="h3">{beer.name}</Typography>
+      <Typography>
+        {beer.style} | {beer.abv}%
+      </Typography>
       <div className={classes.ratingsContainer}>
-        {(beer.ratings.length && (
-          <div className={classes.ratingsSection}>
-            <Typography variant="h4" className={classes.ratingColumnHeader}>
-              Average Rating
-            </Typography>
-            <div className={classes.ratingsSectionRow}>
-              <BeerRating
-                label="Aroma"
-                value={averageRatings.aroma}
-                readOnly={true}
-                key="Aroma"
-              />
-              <BeerRating
-                label="Crushability"
-                value={averageRatings.crushability}
-                readOnly={true}
-                key="Crushability"
-              />
-            </div>
-            <div className={classes.ratingsSectionRow}>
-              <BeerRating
-                label="Taste"
-                value={averageRatings.taste}
-                readOnly={true}
-                key="Taste"
-              />
-              <BeerRating
-                label="Happy"
-                value={averageRatings.dieHappy}
-                readOnly={true}
-                key="Happy"
-              />
-            </div>
-          </div>
+        {(!beer.ratingIsOpen && !beer.ratings.length && (
+          <Typography variant="subtitle1">Rating is not open yet</Typography>
         )) || <></>}
-        {(beer.ratingIsOpen && (
+        {beer.ratingIsOpen && (
           <div className={classes.ratingsSection}>
             <Typography variant="h4" className={classes.ratingColumnHeader}>
-              {hasNotBeenRated ? "Rate this beer" : "You rated this beer"}
+              {hasNotBeenRated
+                ? "Rate this beer"
+                : `Your rating - ${yourRating}`}
             </Typography>
             <div className={classes.ratingsSectionRow}>
               <BeerRating
@@ -157,8 +154,6 @@ const Beer = ({
                 key="Crushability"
                 onUpdate={onCrushabilityUpdate}
               />
-            </div>
-            <div className={classes.ratingsSectionRow}>
               <BeerRating
                 label="Taste"
                 value={userRating.taste}
@@ -180,6 +175,39 @@ const Beer = ({
                 </Button>
               </>
             )) || <></>}
+          </div>
+        )}
+        {(beer.ratings.length && (
+          <div className={classes.ratingsSection}>
+            <Typography variant="h4" className={classes.ratingColumnHeader}>
+              {`Crowd Rating - ${totalAverage}`}
+            </Typography>
+            <div className={classes.ratingsSectionRow}>
+              <BeerRating
+                label="Aroma"
+                value={averageRatings.aroma}
+                readOnly={true}
+                key="Aroma"
+              />
+              <BeerRating
+                label="Crushability"
+                value={averageRatings.crushability}
+                readOnly={true}
+                key="Crushability"
+              />
+              <BeerRating
+                label="Taste"
+                value={averageRatings.taste}
+                readOnly={true}
+                key="Taste"
+              />
+              <BeerRating
+                label="Happy"
+                value={averageRatings.dieHappy}
+                readOnly={true}
+                key="Happy"
+              />
+            </div>
           </div>
         )) || <></>}
       </div>
